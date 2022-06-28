@@ -27,8 +27,8 @@ exports.register = function (req, resp, next) {
     dbUtils.getSession(req).readTransaction(txc => txc.run('MATCH (user:User {username: $username}) RETURN user', { username: username }))
         .then(results => {
             if (!_.isEmpty(results.records)) {
-                resp.status(400);
-                resp.json({ message: 'Usuário já cadastrado', status: 400 });
+                resp.status(404);
+                resp.json({ message: 'Usuário já cadastrado', status: 404 });
                 next();
             }
             else {
@@ -71,18 +71,18 @@ exports.login = function (req, resp, next) {
     dbUtils.getSession(req).readTransaction(txc => txc.run('MATCH (user:User {username: $username}) RETURN user', { username: username }))
         .then(results => {
             if (_.isEmpty(results.records)) {
-                resp.status(400);
-                resp.json({ username: 'usuário não existe', status: 400 });
+                resp.status(404);
+                resp.json({ username: 'usuário não existe', status: 404 });
                 next();
             }
             else {
                 const dbUser = _.get(results.records[0].get('user'), 'properties');
                 if (dbUser.password != hashPassword(username, password)) {
-                    resp.status(400);
-                    resp.json({ password: 'senha inválida', status: 400 });
+                    resp.status(404);
+                    resp.json({ password: 'senha inválida', status: 404 });
                     next();
                 } else {
-                    resp.status(400);
+                    resp.status(200);
                     resp.json({ token: _.get(dbUser, 'api_key') });
                     next();
                 }
@@ -129,8 +129,8 @@ exports.update = function (req, resp, next) {
         const authHeader = req.headers['authorization'];
         const match = authHeader.match(/^Token (\S+)/);
         if (!match || !match[1]) {
-            resp.status(401);
-            resp.json({ message: 'Formato de autenticação inválido. Follow `Token <token>`', status: 401 });
+            resp.status(404);
+            resp.json({ message: 'Formato de autenticação inválido. Follow `Token <token>`', status: 404 });
             next();
         }
 
