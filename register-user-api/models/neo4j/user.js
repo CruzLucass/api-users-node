@@ -3,10 +3,16 @@
 const _ = require('lodash');
 
 const User = module.exports = function (_node) {
-    const username = _node.properties['username'];
+    const email = _node.properties['email'];
+    const name = _node.properties['name'];
+    const age = _node.properties['age'];
+    const phone = _node.properties['phone'];
 
     _.extend(this, {
         'id': _node.properties['id'],
-        'username': username,
+        'email': email,
+        'name': name,
+        'age': age,
+        'phone': phone
     });
 };

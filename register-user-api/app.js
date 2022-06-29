@@ -10,22 +10,34 @@ const writeError = require("./helpers/response").writeError;
 const corsMiddleware = require('restify-cors-middleware2')
 
 const cors = corsMiddleware({
-    preflightMaxAge: 5, //Optional
-    origins: ['http://localhost:5000', '*'],
-    allowMethods: ['*'],
+    preflightMaxAge: 5,
+    origins: ['*'],
     allowHeaders: ['*'],
-    exposeHeaders: ['API-Token-Expiry'],
-})
+    exposeHeaders: ['*']
+});
 
 const server = restify.createServer();
 
 server.pre(cors.preflight)
 server.use(cors.actual)
 
-
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
+
+server.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header(
+        "Access-Control-Allow-Methods",
+        "GET,HEAD,OPTIONS,POST,PUT,DELETE"
+    );
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    return next();
+});
 
 server.use(setAuthUser);
 server.use(neo4jSessionCleanup);
