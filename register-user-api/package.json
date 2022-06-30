@@ -1,13 +1,13 @@
 {
   "name": "register-user-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "api for control of users",
+  "main": "app.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "lucas cruz",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
@@ -20,5 +20,10 @@
     "restify-cors-middleware2": "^2.1.2",
     "restify-errors": "^8.0.2",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "api-uses-node"
   }
 }
