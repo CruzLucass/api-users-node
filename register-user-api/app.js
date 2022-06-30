@@ -43,11 +43,11 @@ server.use(setAuthUser);
 server.use(neo4jSessionCleanup);
 
 //routes
-server.post('/register', routes.users.register);
-server.post('/login', routes.users.login);
-server.get('/users/me', routes.users.me);
-server.put('/users/', routes.users.update);
-server.del('/users/', routes.users.deleteUser);
+server.post('/api/v0/register', routes.users.register);
+server.post('/api/v0/login', routes.users.login);
+server.get('/api/v0/users/me', routes.users.me);
+server.put('/api/v0/users/', routes.users.update);
+server.del('/api/v0/users/', routes.users.deleteUser);
 
 server.use(function (err, req, res, next) {
     if (err && err.status) {

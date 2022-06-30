@@ -16,7 +16,7 @@ nconf.env(['PORT', 'NODE_ENV'])
             alias: 'PORT',
             describe: 'Port to run on.',
             demand: false,
-            default: 5000
+            default: process.env.PORT
         },
         'n': {
             alias: "neo4j",
@@ -26,10 +26,10 @@ nconf.env(['PORT', 'NODE_ENV'])
         }
     })
     .defaults({
-        'USERNAME': process.env.NEO4J_USER,
-        'PASSWORD': process.env.NEO4J_PASSWORD,
+        'USERNAME': process.env.DATABASE_USER,
+        'PASSWORD': process.env.DATABASE_PASSWORD,
         'neo4j': 'local',
-        'neo4j-local': process.env.NEO4JDB_URI,
+        'neo4j-local': process.env.DATABASE_URL,
         'base_url': 'http://localhost:5000',
         'api_path': '/api/v0'
     });
