@@ -7,25 +7,26 @@ const setAuthUser = require('./middlewares/setAuthUser');
 const neo4jSessionCleanup = require('./middlewares/neo4jSessionCleanup');
 const writeError = require("./helpers/response").writeError;
 
-const cors = require("cors");
+const corsMiddleware = require('restify-cors-middleware2')
 
-const corsOptions = {
-    origin: '*',
-    credentials: true,            //access-control-allow-credentials:true
-    optionSuccessStatus: 200,
-}
+const cors = corsMiddleware({
+    preflightMaxAge: 5,
+    origins: ['*'],
+    allowHeaders: ['*'],
+    exposeHeaders: ['*']
+});
+
 const server = restify.createServer();
 
-server.use(cors(corsOptions));
+server.pre(cors.preflight)
+server.use(cors.actual)
 
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.bodyParser());
 
-//enable CORS
-
-server.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:5000");
+server.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
     res.header('Access-Control-Allow-Credentials', true);
     res.header(
         "Access-Control-Allow-Methods",
@@ -38,10 +39,8 @@ server.use(function (req, res, next) {
     return next();
 });
 
-//api custom middlewares:
 server.use(setAuthUser);
 server.use(neo4jSessionCleanup);
-
 
 //routes
 server.post('/register', routes.users.register);
@@ -50,7 +49,6 @@ server.get('/users/me', routes.users.me);
 server.put('/users/', routes.users.update);
 server.del('/users/', routes.users.deleteUser);
 
-//server error handler
 server.use(function (err, req, res, next) {
     if (err && err.status) {
         writeError(res, err);
